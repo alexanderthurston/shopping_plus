@@ -5,9 +5,13 @@ import { JwtBodyDto } from 'server/dto/jwt_body.dto';
 import { JwtBody } from 'server/decorators/jwt_body.decorator';
 import { Item } from 'server/entities/item.entity';
 import { Recipe } from 'server/entities/recipe.entity';
+import { update } from 'lodash';
 
 class ItemBody {
   name: string;
+  favorite: boolean;
+  onShoppingList: boolean;
+  checked: boolean;
 }
 
 class RecipeBody {
@@ -21,19 +25,33 @@ export class ItemAndRecipeController {
 
   @Get('/all')
   public async index(@JwtBody() jwtBody: JwtBodyDto) {
-    const items = await this.itemAndRecipeService.findAllItems(jwtBody.userId);
-    const recipes = await this.itemAndRecipeService.findAllRecipes(jwtBody.userId);
+    const allItems = await this.itemAndRecipeService.findAllItems(jwtBody.userId);
+    const allRecipes = await this.itemAndRecipeService.findAllRecipes(jwtBody.userId);
 
-    return { items, recipes };
+    return { allItems, allRecipes };
   }
 
   @Post('/items')
   public async createItem(@JwtBody() jwtBody: JwtBodyDto, @Body() body: ItemBody) {
     let item = new Item();
-    item.favorite = false;
+    item.favorite = body.favorite;
     item.recent = new Date().getTime();
+    item.checked = body.checked;
+    item.onShoppingList = body.onShoppingList;
     item.name = body.name;
     item.userId = jwtBody.userId;
+    item = await this.itemAndRecipeService.createItem(item);
+    return { item };
+  }
+
+  @Put('/items/:id')
+  public async updateItem(@Param('id') id: number, @Body() body: ItemBody) {
+    let item = await this.itemAndRecipeService.findItemById(id);
+    item.favorite = body.favorite;
+    item.recent = new Date().getTime();
+    item.checked = body.checked;
+    item.onShoppingList = body.onShoppingList;
+
     item = await this.itemAndRecipeService.createItem(item);
     console.log(item);
     return { item };
@@ -44,6 +62,7 @@ export class ItemAndRecipeController {
     let recipe = new Recipe();
     recipe.userId = jwtBody.userId;
     recipe.name = body.name;
+    recipe.items = body.items;
     recipe = await this.itemAndRecipeService.createRecipe(recipe);
     return { recipe };
   }

@@ -33,6 +33,16 @@ export class AddItemsAndRecipes1649887709114 implements MigrationInterface {
             isNullable: false,
           },
           {
+            name: 'onShoppingList',
+            type: 'boolean',
+            isNullable: false,
+          },
+          {
+            name: 'checked',
+            type: 'boolean',
+            isNullable: false,
+          },
+          {
             name: 'recipeId',
             type: 'int',
             isNullable: true,

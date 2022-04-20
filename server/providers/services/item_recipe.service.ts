@@ -16,6 +16,7 @@ export class ItemAndRecipeService {
   findAllItems(userId: number): Promise<Item[]> {
     return this.itemsRepository.find({
       where: { userId },
+      relations: ['recipe'],
     });
   }
 

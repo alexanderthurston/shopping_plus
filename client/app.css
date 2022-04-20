@@ -3,3 +3,7 @@
 @tailwind components;
 
 @tailwind utilities;
+
+.shopping-list {
+    list-style-type: none;
+}

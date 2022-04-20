@@ -15,11 +15,8 @@ export const AddRecipeModal = ({ saveRecipe }) => {
     };
 
     const { item } = await api.post('/items', itemBody);
-    console.log(item);
     setRecipeItems([...recipeItems, item]);
   };
-
-  console.log(recipeItems);
 
   return (
     <div>

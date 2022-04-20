@@ -18,6 +18,12 @@ export class Item {
   @Column()
   recent: number;
 
+  @Column()
+  onShoppingList: boolean;
+
+  @Column()
+  checked: boolean;
+
   @ManyToOne(() => Recipe, (recipe) => recipe.items)
   recipe: Recipe;
 }
