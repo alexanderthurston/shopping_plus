@@ -33,15 +33,18 @@ export const AddRecipeModal = ({ saveRecipe }) => {
       />
       <AddItemModal saveItem={saveRecipeItem} />
       {recipeItems && <Items items={recipeItems} heading="Recipe Items" />}
+      <div className='w-full flex justify-end'>
       <Button
-        type="button"
         onClick={() => {
           saveRecipe(recipeName, recipeItems);
           setRecipeItems([]);
+          setRecipeName('');
         }}
+
       >
         Save Recipe
       </Button>
+      </div>
     </div>
   );
 };

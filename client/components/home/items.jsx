@@ -3,8 +3,8 @@ import { Item } from './item';
 export const Items = ({ heading, items, addToShoppingList, toggleFavorite }) => {
   return (
     <div className="">
-      <p className="text-center text-lg">{heading}</p>
-      <div className="border-4 border-green-700">
+      <p className="text-center text-2xl">{heading}</p>
+      <div className="border-4">
         {items.map((item) => (
           <Item key={item.id} item={item} addToShoppingList={addToShoppingList} toggleFavorite={toggleFavorite} />
         ))}
