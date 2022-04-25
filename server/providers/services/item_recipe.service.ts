@@ -23,6 +23,7 @@ export class ItemAndRecipeService {
   findItemById(id: number): Promise<Item> {
     return this.itemsRepository.findOne({
       where: { id },
+      relations: ['recipe'],
     });
   }
 

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '../common/button';
 
-export const AddItemModal = ({ saveItem }) => {
+export const AddItemModal = ({ saveItem, forRecipe }) => {
   const [itemName, setItemName] = useState('');
 
   return (
@@ -21,7 +21,7 @@ export const AddItemModal = ({ saveItem }) => {
           setItemName('');
         }}
       >
-        Save Item
+        {forRecipe ? 'Add Item' : 'Save Item'}
       </Button>
     </div>
   );

@@ -24,11 +24,12 @@ export const Home = () => {
   const [shoppingItems, setShoppingItems] = useState([]);
   const [favItems, setFavItems] = useState([]);
   const [shopMode, setShopMode] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(async () => {
     const res = await api.get('/users/me');
     const { allItems, allRecipes } = await api.get('/all');
-    baseItems = allItems.filter((i) => !i.onShoppingList);
+    baseItems = allItems.filter((i) => !i.onShoppingList && i.recipe == null);
     favoriteItems = baseItems.filter((i) => i.favorite);
     regItems = baseItems.sort((curr, prev) => prev.recent - curr.recent);
     shopItems = allItems.filter((i) => i.onShoppingList);
@@ -41,6 +42,10 @@ export const Home = () => {
   }, []);
 
   const saveItem = async (name) => {
+    if (!name) {
+      setErrorMessage('Item name cannot be empty');
+      return;
+    }
     const itemBody = {
       name,
       favorite: false,
@@ -49,16 +54,22 @@ export const Home = () => {
     };
 
     const { item } = await api.post('/items', itemBody);
+    if (item) setErrorMessage('');
     setItems([...items, item]);
   };
 
   const saveRecipe = async (name, items) => {
+    if (!name) {
+      setErrorMessage('Recipe name cannot be empty');
+    }
+
     const recipeBody = {
       name,
       items,
     };
 
     const { recipe } = await api.post('/recipes', recipeBody);
+    if (recipe) setErrorMessage('');
     setRecipes([...recipes, recipe]);
   };
 
@@ -173,7 +184,17 @@ export const Home = () => {
 
   return (
     <div className="p-4 ">
-      <NavBar user={user} logout={logout} roles={roles} navigate={navigate} toggleShopMode={toggleShopMode} shopMode={shopMode} />
+      <NavBar
+        user={user}
+        logout={logout}
+        roles={roles}
+        navigate={navigate}
+        toggleShopMode={toggleShopMode}
+        shopMode={shopMode}
+      />
+      {errorMessage && (
+        <div className="flex justify-center w-full h-1/12 p-2 m-2 bg-red-200 text-red-700 text-2xl">{errorMessage}</div>
+      )}
       {!shopMode && (
         <div className="flex flex-row items-start">
           <div className="flex flex-col w-1/3">
@@ -207,7 +228,6 @@ export const Home = () => {
                     toggleFavorite={toggleFavorite}
                   />
                 )}
-                
               </div>
               <div className="flex flex-col w-1/2 text-lg">
                 <p className="text-center text-2xl">Add Item</p>
@@ -216,7 +236,7 @@ export const Home = () => {
                 </div>
                 <p className="text-center text-2xl">Add Recipe</p>
                 <div className="flex flex-1 rounded border-4 p-4 m-2">
-                  <AddRecipeModal saveRecipe={saveRecipe} />
+                  <AddRecipeModal saveRecipe={saveRecipe} setErrorMessage={setErrorMessage}/>
                 </div>
               </div>
             </div>

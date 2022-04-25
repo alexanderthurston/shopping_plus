@@ -53,6 +53,8 @@ export class ItemAndRecipeController {
     updatedItem.onShoppingList = body.onShoppingList;
 
     updatedItem = await this.itemAndRecipeService.createItem(updatedItem);
+    updatedItem = await this.itemAndRecipeService.findItemById(updatedItem.id);
+    console.log(updatedItem);
     return { updatedItem };
   }
 

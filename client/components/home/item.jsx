@@ -16,12 +16,10 @@ export const Item = ({ item, addToShoppingList, toggleFavorite }) => {
       />
 
       <span className="text-xl">{item.name}</span>
-      
-      <span className="justify-end text-xl">
-      {addToShoppingList && 
-        <Button onClick={() => addToShoppingList(item)} children="+" />}
-      </span>
 
+      <span className="justify-end text-xl">
+        {addToShoppingList && <Button onClick={() => addToShoppingList(item)} children="+" />}
+      </span>
     </div>
   );
 };
