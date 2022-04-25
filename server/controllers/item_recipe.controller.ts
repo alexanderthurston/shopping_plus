@@ -46,15 +46,14 @@ export class ItemAndRecipeController {
 
   @Put('/items/:id')
   public async updateItem(@Param('id') id: number, @Body() body: ItemBody) {
-    let item = await this.itemAndRecipeService.findItemById(id);
-    item.favorite = body.favorite;
-    item.recent = new Date().getTime();
-    item.checked = body.checked;
-    item.onShoppingList = body.onShoppingList;
+    let updatedItem = await this.itemAndRecipeService.findItemById(id);
+    updatedItem.favorite = body.favorite;
+    updatedItem.recent = new Date().getTime();
+    updatedItem.checked = body.checked;
+    updatedItem.onShoppingList = body.onShoppingList;
 
-    item = await this.itemAndRecipeService.createItem(item);
-    console.log(item);
-    return { item };
+    updatedItem = await this.itemAndRecipeService.createItem(updatedItem);
+    return { updatedItem };
   }
 
   @Post('/recipes')

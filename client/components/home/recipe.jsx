@@ -1,3 +1,7 @@
-export const Recipe = ({ recipe }) => {
-  return <div key={recipe.id}>{recipe.name}</div>;
+export const Recipe = ({ recipe, addRecipeItemsToShoppingList }) => {
+  return (
+    <div key={recipe.id} onClick={() => addRecipeItemsToShoppingList(recipe)}>
+      {recipe.name}
+    </div>
+  );
 };

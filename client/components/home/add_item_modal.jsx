@@ -1,14 +1,27 @@
 import { useState } from 'react';
 import { Button } from '../common/button';
 
-export const AddItemModal = ({ saveItem, forRecipe }) => {
+export const AddItemModal = ({ saveItem }) => {
   const [itemName, setItemName] = useState('');
 
   return (
     <div>
-      <input type="text" value={itemName} onChange={(e) => setItemName(e.target.value)} />
-      <Button type="button" onClick={() => saveItem(itemName)}>
-        Save Item {forRecipe && 'to Recipe'}
+      <label htmlFor="item">Item Name: </label>
+      <input
+        className="border-2"
+        name="item"
+        type="text"
+        value={itemName}
+        onChange={(e) => setItemName(e.target.value)}
+      />
+      <Button
+        type="button"
+        onClick={() => {
+          saveItem(itemName);
+          setItemName('');
+        }}
+      >
+        Save Item
       </Button>
     </div>
   );

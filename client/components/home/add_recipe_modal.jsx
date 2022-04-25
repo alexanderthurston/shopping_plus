@@ -12,6 +12,9 @@ export const AddRecipeModal = ({ saveRecipe }) => {
   const saveRecipeItem = async (name) => {
     const itemBody = {
       name,
+      favorite: false,
+      onShoppingList: false,
+      checked: false,
     };
 
     const { item } = await api.post('/items', itemBody);
@@ -20,10 +23,23 @@ export const AddRecipeModal = ({ saveRecipe }) => {
 
   return (
     <div>
-      <input type="text" value={recipeName} onChange={(e) => setRecipeName(e.target.value)} />
+      <label htmlFor="recipe">Recipe Name: </label>
+      <input
+        className="border-2"
+        name="recipe"
+        type="text"
+        value={recipeName}
+        onChange={(e) => setRecipeName(e.target.value)}
+      />
       <AddItemModal saveItem={saveRecipeItem} />
-      {recipeItems && <Items items={recipeItems} />}
-      <Button type="button" onClick={() => saveRecipe(recipeName, recipeItems)}>
+      {recipeItems && <Items items={recipeItems} heading="Recipe Items" />}
+      <Button
+        type="button"
+        onClick={() => {
+          saveRecipe(recipeName, recipeItems);
+          setRecipeItems([]);
+        }}
+      >
         Save Recipe
       </Button>
     </div>

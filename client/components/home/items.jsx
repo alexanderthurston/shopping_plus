@@ -1,12 +1,12 @@
 import { Item } from './item';
 
-export const Items = ({ items, addToShoppingList }) => {
+export const Items = ({ heading, items, addToShoppingList, toggleFavorite }) => {
   return (
     <div className="">
-      <h2>Items</h2>
+      <p className="text-center text-lg">{heading}</p>
       <div className="border-4 border-green-700">
         {items.map((item) => (
-          <Item key={item.id} item={item} addToShoppingList={addToShoppingList} />
+          <Item key={item.id} item={item} addToShoppingList={addToShoppingList} toggleFavorite={toggleFavorite} />
         ))}
       </div>
     </div>
