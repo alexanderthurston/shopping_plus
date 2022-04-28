@@ -31,6 +31,10 @@ export class ItemAndRecipeService {
     return this.itemsRepository.save(item);
   }
 
+  deleteItem(item: Item) {
+    return this.itemsRepository.delete(item);
+  }
+
   findAllRecipes(userId: number): Promise<Recipe[]> {
     return this.recipesRepository.find({
       where: { userId },

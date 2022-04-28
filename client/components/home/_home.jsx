@@ -25,6 +25,7 @@ export const Home = () => {
   const [favItems, setFavItems] = useState([]);
   const [shopMode, setShopMode] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(async () => {
     const res = await api.get('/users/me');
@@ -56,6 +57,20 @@ export const Home = () => {
     const { item } = await api.post('/items', itemBody);
     if (item) setErrorMessage('');
     setItems([...items, item]);
+  };
+
+  const deleteItem = async (item) => {
+    const { success } = await api.del(`/items/${item.id}`);
+    if (success) {
+      setSuccessMessage('Item deleted successfully');
+      setErrorMessage('');
+    } else {
+      setErrorMessage('Something went wrong during item deletion.');
+    }
+    setItems(items.filter((i) => i !== item));
+    if (item.favorite) {
+      setFavItems(favItems.filter((i) => i !== item));
+    }
   };
 
   const saveRecipe = async (name, items) => {
@@ -122,6 +137,28 @@ export const Home = () => {
         }
       }),
     );
+  };
+
+  const editItemName = async (item, name) => {
+    const itemBody = {
+      name,
+      favorite: item.favorite,
+      onShoppingList: item.onShoppingList,
+      checked: item.checked,
+    };
+
+    const { updatedItem } = await api.put(`/items/${item.id}`, itemBody);
+
+    setShoppingItems(
+      shoppingItems.map((i) => {
+        if (i === item) {
+          return updatedItem;
+        } else {
+          return i;
+        }
+      }),
+    );
+    window.location.reload();
   };
 
   const toggleFavorite = async (item) => {
@@ -226,6 +263,8 @@ export const Home = () => {
                     items={items}
                     addToShoppingList={addToShoppingList}
                     toggleFavorite={toggleFavorite}
+                    deleteItem={deleteItem}
+                    editName={editItemName}
                   />
                 )}
               </div>
@@ -236,7 +275,7 @@ export const Home = () => {
                 </div>
                 <p className="text-center text-2xl">Add Recipe</p>
                 <div className="flex flex-1 rounded border-4 p-4 m-2">
-                  <AddRecipeModal saveRecipe={saveRecipe} setErrorMessage={setErrorMessage}/>
+                  <AddRecipeModal saveRecipe={saveRecipe} setErrorMessage={setErrorMessage} />
                 </div>
               </div>
             </div>

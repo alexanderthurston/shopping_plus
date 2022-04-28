@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, Param, Post, Put } from '@nestjs/common';
 import { UsersService } from 'server/providers/services/users.service';
 import { ItemAndRecipeService } from 'server/providers/services/item_recipe.service';
 import { JwtBodyDto } from 'server/dto/jwt_body.dto';
@@ -47,6 +47,7 @@ export class ItemAndRecipeController {
   @Put('/items/:id')
   public async updateItem(@Param('id') id: number, @Body() body: ItemBody) {
     let updatedItem = await this.itemAndRecipeService.findItemById(id);
+    updatedItem.name = body.name;
     updatedItem.favorite = body.favorite;
     updatedItem.recent = new Date().getTime();
     updatedItem.checked = body.checked;
@@ -54,8 +55,17 @@ export class ItemAndRecipeController {
 
     updatedItem = await this.itemAndRecipeService.createItem(updatedItem);
     updatedItem = await this.itemAndRecipeService.findItemById(updatedItem.id);
-    console.log(updatedItem);
     return { updatedItem };
+  }
+
+  @Delete('/items/:id')
+  public async destroyItem(@JwtBody() jwtBody: JwtBodyDto, @Param('id') id: number) {
+    const item = await this.itemAndRecipeService.findItemById(id);
+    if (item.userId != jwtBody.userId) {
+      throw new HttpException('Unauthorized', 401);
+    }
+    this.itemAndRecipeService.deleteItem(item);
+    return { success: true };
   }
 
   @Post('/recipes')
